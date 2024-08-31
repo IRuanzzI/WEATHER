@@ -7,7 +7,17 @@ async function searchCity(city) {
         const data = await response.json();
         inputData(data);
     } catch (error) {
-        displayError(`Erro ao buscar dados da cidade: ${error.message}`);
+        alert(`Erro ao buscar dados da cidade: ${error.message}`);
+    }
+}
+
+function searchCityFromInput() {
+    const cityInput = document.querySelector('.city-search').value;
+    if (cityInput) {
+        searchCity(cityInput);
+        document.querySelector('.city-search').value = '';
+    } else {
+        alert("Por favor, insira o nome de uma cidade.");
     }
 }
 
@@ -18,7 +28,7 @@ async function searchCityByCoordinates(latitude, longitude) {
         const data = await response.json();
         inputData(data);
     } catch (error) {
-        displayError(`Erro ao buscar dados com coordenadas: ${error.message}`);
+        alert(`Erro ao buscar dados com coordenadas: ${error.message}`);
     }
 }
 
@@ -34,17 +44,16 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
     } else {
-        displayError("Geolocalização não é suportada pelo seu navegador.");
+        alert("Geolocalização não é suportada pelo seu navegador.");
     }
 }
 
 function showPosition(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    alert("Localização obtida com sucesso! Latitude: " + latitude + ", Longitude: " + longitude);
+    alert("Localização obtida com sucesso!");
     searchCityByCoordinates(latitude, longitude);
 }
-
 
 function showError(error) {
     let message = "Erro ao obter localização:";
@@ -65,26 +74,14 @@ function showError(error) {
     alert(message);
 }
 
-
-function displayMessage(message) {
-    const messageElement = document.querySelector('.error-message');
-    if (messageElement) {
-        messageElement.textContent = message;
-        messageElement.style.color = 'green'; // Exemplo para mensagens de sucesso
-    }
-}
-
-function displayError(error) {
-    const errorElement = document.querySelector('.error-message');
-    if (errorElement) {
-        errorElement.textContent = error;
-        errorElement.style.color = 'red'; // Mensagens de erro
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const locateButton = document.querySelector('.locate');
     if (locateButton) {
         locateButton.addEventListener('click', getLocation);
+    }
+    
+    const searchButton = document.querySelector('.search');
+    if (searchButton) {
+        searchButton.addEventListener('click', searchCityFromInput);
     }
 });

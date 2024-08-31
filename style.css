@@ -16,7 +16,7 @@ body {
 
 .caixa-maior {
     background: #000;
-    opacity: 0.8;
+    opacity: 90%;
     border-radius: 25px;
     padding: 20px;
     width: 95%;
@@ -96,7 +96,7 @@ span {
     margin-top: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 400px) {
     body {
         background-image: url('https://picsum.photos/720/1280?category=nature'); /* Imagem menor para dispositivos móveis */
         background-size: cover;
@@ -117,7 +117,7 @@ span {
 
     .city-search {
         padding: 8px;
-        width: calc(100% - 40px);
+        width: calc(65% - 30px);
     }
 
     .search-img, .locate-img {
