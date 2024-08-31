@@ -38,26 +38,33 @@ function getLocation() {
     }
 }
 
+function showPosition(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    alert("Localização obtida com sucesso! Latitude: " + latitude + ", Longitude: " + longitude);
+    searchCityByCoordinates(latitude, longitude);
+}
 
 
 function showError(error) {
-    let errorMessage;
+    let message = "Erro ao obter localização:";
     switch (error.code) {
         case error.PERMISSION_DENIED:
-            errorMessage = "Usuário negou a solicitação de Geolocalização.";
+            message += " Usuário negou a solicitação de Geolocalização.";
             break;
         case error.POSITION_UNAVAILABLE:
-            errorMessage = "As informações de localização não estão disponíveis.";
+            message += " As informações de localização não estão disponíveis.";
             break;
         case error.TIMEOUT:
-            errorMessage = "A solicitação para obter a localização do usuário expirou.";
+            message += " A solicitação para obter a localização do usuário expirou.";
             break;
         case error.UNKNOWN_ERROR:
-            errorMessage = "Ocorreu um erro desconhecido.";
+            message += " Ocorreu um erro desconhecido.";
             break;
     }
-    displayError(errorMessage);
+    alert(message);
 }
+
 
 function displayMessage(message) {
     const messageElement = document.querySelector('.error-message');
