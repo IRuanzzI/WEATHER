@@ -38,12 +38,7 @@ function getLocation() {
     }
 }
 
-function showPosition(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    displayMessage(`Latitude: ${latitude} Longitude: ${longitude}`);
-    searchCityByCoordinates(latitude, longitude);
-}
+
 
 function showError(error) {
     let errorMessage;
