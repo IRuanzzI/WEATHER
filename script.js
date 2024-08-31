@@ -2,21 +2,23 @@ const key = "a178b5735252dcb5bf2b3c92f88b826d";
 
 async function searchCity(city) {
     try {
-        const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&lang=pt_br&units=metric`)
-            .then(result => result.json());
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&lang=pt_br&units=metric`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
         inputData(data);
     } catch (error) {
-        console.error("Erro ao buscar dados da cidade:", error);
+        displayError(`Erro ao buscar dados da cidade: ${error.message}`);
     }
 }
 
 async function searchCityByCoordinates(latitude, longitude) {
     try {
-        const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&lang=pt_br&units=metric`)
-            .then(result => result.json());
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&lang=pt_br&units=metric`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
         inputData(data);
     } catch (error) {
-        console.error("Erro ao buscar dados com coordenadas:", error);
+        displayError(`Erro ao buscar dados com coordenadas: ${error.message}`);
     }
 }
 
@@ -32,41 +34,55 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
     } else {
-        console.log("Geolocalização não é suportada pelo seu navegador.");
+        displayError("Geolocalização não é suportada pelo seu navegador.");
     }
 }
 
 function showPosition(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    console.log("Latitude: " + latitude + " Longitude: " + longitude);
+    displayMessage(`Latitude: ${latitude} Longitude: ${longitude}`);
     searchCityByCoordinates(latitude, longitude);
 }
 
 function showError(error) {
-    console.log("Erro ao obter localização:", error.message);
+    let errorMessage;
     switch (error.code) {
         case error.PERMISSION_DENIED:
-            console.log("Usuário negou a solicitação de Geolocalização.");
+            errorMessage = "Usuário negou a solicitação de Geolocalização.";
             break;
         case error.POSITION_UNAVAILABLE:
-            console.log("As informações de localização não estão disponíveis.");
+            errorMessage = "As informações de localização não estão disponíveis.";
             break;
         case error.TIMEOUT:
-            console.log("A solicitação para obter a localização do usuário expirou.");
+            errorMessage = "A solicitação para obter a localização do usuário expirou.";
             break;
         case error.UNKNOWN_ERROR:
-            console.log("Ocorreu um erro desconhecido.");
+            errorMessage = "Ocorreu um erro desconhecido.";
             break;
+    }
+    displayError(errorMessage);
+}
+
+function displayMessage(message) {
+    const messageElement = document.querySelector('.error-message');
+    if (messageElement) {
+        messageElement.textContent = message;
+        messageElement.style.color = 'green'; // Exemplo para mensagens de sucesso
     }
 }
 
-// Adicionando o event listener após o DOM estar totalmente carregado
+function displayError(error) {
+    const errorElement = document.querySelector('.error-message');
+    if (errorElement) {
+        errorElement.textContent = error;
+        errorElement.style.color = 'red'; // Mensagens de erro
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const locateButton = document.querySelector('.locate');
     if (locateButton) {
         locateButton.addEventListener('click', getLocation);
-    } else {
-        console.error("Botão '.locate' não encontrado.");
     }
 });
